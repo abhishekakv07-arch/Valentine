@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Be My Valentine 💘</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(-45deg,#ff9a9e,#fad0c4,#fbc2eb,#a18cd1);
+  background-size:400% 400%;
+  animation:bgMove 14s ease infinite;
+  font-family:Poppins,sans-serif;
+  overflow:hidden;
+}
+@keyframes bgMove{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+.card{
+  width:min(92%,440px);
+  padding:42px 30px;
+  background:rgba(255,255,255,0.95);
+  backdrop-filter:blur(18px);
+  border-radius:34px;
+  text-align:center;
+  box-shadow:0 30px 80px rgba(0,0,0,.25);
+}
+.emoji{
+  font-size:68px;
+  animation:pulse 1.6s infinite;
+}
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.1)}
+}
+h2{
+  font-family:"Playfair Display",serif;
+  font-size:27px;
+  color:#4a1c2f;
+  margin:14px 0;
+}
+.media-wrap{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width:100%;
+}
+.media-wrap img,
+.media-wrap iframe{
+  width:90%;
+  max-width:260px;
+  border-radius:18px;
+  margin:18px 0;
+  display:none;
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
+}
+.msg{
+  font-size:14px;
+  color:#555;
+  min-height:60px;
+}
+.buttons{
+  position:relative;
+  height:90px;
+  margin-top:22px;
+}
+button{
+  position:absolute;
+  padding:15px 38px;
+  border-radius:40px;
+  border:none;
+  font-size:16px;
+  cursor:pointer;
+  transition:.25s ease;
+}
+#yes{
+  left:8%;
+  background:linear-gradient(135deg,#ff4d6d,#ff758f);
+  color:#fff;
+  box-shadow:0 15px 35px rgba(255,77,109,.6);
+}
+#no{
+  left:55%;
+  background:#fff;
+  color:#777;
+}
+.heart{
+  position:absolute;
+  bottom:-20px;
+  animation:floatUp linear forwards;
+  pointer-events:none;
+}
+@keyframes floatUp{
+  from{transform:translateY(0);opacity:1}
+  to{transform:translateY(-120vh);opacity:0}
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+  <div class="emoji">💞</div>
+  <h2>Aditi,<br>kya tum meri Valentine banogi?</h2>
+
+  <div class="media-wrap">
+    <!-- GIFs will come here later -->
+  </div>
+
+  <p class="msg" id="reactionMsg"></p>
+
+  <div class="buttons">
+    <button id="yes">Yes 💖</button>
+    <button id="no">No 🙈</button>
+  </div>
+</div>
+
+<!-- Sounds -->
+<audio id="noSound" preload="auto" src="https://assets.mixkit.co/sfx/preview/mixkit-soft-woosh-1491.mp3"></audio>
+<audio id="yesSound" preload="auto" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3"></audio>
+
+<script>
+const card = document.getElementById("card");
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
+const msg = document.getElementById("reactionMsg");
+const noSound = document.getElementById("noSound");
+const yesSound = document.getElementById("yesSound");
+
+let noCount = 0;
+
+/* TEMP NO LOGIC (GIFs baad me add karenge) */
+noBtn.onclick = () => {
+  noSound.currentTime = 0;
+  noSound.play().catch(()=>{});
+  noCount++;
+
+  msg.innerHTML = `NO #${noCount} 😅<br>Thoda sa aur soch lo na…`;
+  
+  if(noCount >= 5){
+    noBtn.style.display = "none";
+    yesBtn.style.left = "30%";
+    yesBtn.style.transform = "scale(1.3)";
+    yesBtn.innerText = "Okay… YES 💖";
+  }
+};
+
+yesBtn.onclick = () => {
+  yesSound.currentTime = 0;
+  yesSound.play().catch(()=>{});
+
+  confetti({particleCount:320,spread:150,origin:{y:0.6}});
+
+  card.innerHTML = `
+    <div class="emoji">😍💞</div>
+    <h2>Finally maan hi gayi 😌❤️</h2>
+
+    <div class="media-wrap">
+      <img src="us.png" style="display:block">
+    </div>
+
+    <p class="msg">
+      Dekho kitne ache lagte hain hum saath mein ❤️<br><br>
+      Ye moment sirf tum aur main 💐
+    </p>
+  `;
+};
+
+/* floating hearts */
+function heart(){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerHTML=Math.random()>0.5?"❤️":"💗";
+  h.style.left=Math.random()*100+"vw";
+  h.style.fontSize=Math.random()*22+14+"px";
+  h.style.animationDuration=Math.random()*3+4+"s";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),8000);
+}
+setInterval(heart,400);
+</script>
+
+</body>
+</html>
